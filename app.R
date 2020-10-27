@@ -18,8 +18,8 @@ ui <- shiny::fluidPage(
     windowTitle = "BnaGWAS",
     theme = shinytheme("flatly"),
     tabPanel("GWAS",mod_gwas_ui("gwas")),
-    tabPanel("Documentation", icon = icon("file-text")),
-    tabPanel("About", icon = icon("info-circle")),
+    tabPanel("Documentation", mod_doc_ui("doc"), icon = icon("file-text")),
+    tabPanel("About",mod_about_ui("about"), icon = icon("info-circle")),
     footer = footerTagList
   )
 )

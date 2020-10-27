@@ -23,6 +23,8 @@ source("script/readNewData.R")
 source("script/gwas_emmax_cov.R")
 source("script/extraxt_gene.R")
 source("script/manhattan_qq_plot.R")
+source("script/mod_about.R")
+source("script/mod_documentation.R")
 
 load("./data/Bna_gene_anno.RData")
 footerTagList <- list(

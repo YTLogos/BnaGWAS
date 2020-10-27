@@ -67,7 +67,7 @@ mod_gwas_server <- function(input, output, session) {
         res <- data.table::fread(paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.ps"), data.table = FALSE)
         global_value$res <- res
         colnames(res) <- c("SNPID", "beta", "SE(beta)", "p-value")
-        DT::datatable(global_value$res,
+        DT::datatable(res,
                       rownames = FALSE,
                       filter = "top",
                       selection = "single",
