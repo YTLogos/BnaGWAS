@@ -27,6 +27,7 @@ source("script/mod_about.R")
 source("script/mod_documentation.R")
 
 load("./data/Bna_gene_anno.RData")
+
 footerTagList <- list(
   tags$footer(id = "myFooter",
               shiny::includeHTML("www/md/footer.html")
