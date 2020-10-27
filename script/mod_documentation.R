@@ -1,12 +1,12 @@
 #' Title
 #'
-#' @param id 
+#' @param id
 #'
 #' @return
 #' @export
 #'
 #' @examples
-mod_doc_ui <- function(id){
+mod_doc_ui <- function(id) {
   ns <- NS(id)
   tagList(
     column(
@@ -17,6 +17,6 @@ mod_doc_ui <- function(id){
   )
 }
 
-mod_doc_server <- function(input, output, session){
+mod_doc_server <- function(input, output, session) {
   ns <- session$ns
 }

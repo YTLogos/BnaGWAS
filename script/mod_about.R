@@ -1,6 +1,6 @@
 #' Title
 #'
-#' @param id 
+#' @param id
 #'
 #' @return
 #' @export

@@ -62,3 +62,4 @@ get_gene_from_snp <- function(
   gene_snp <- do.call(rbind, test)
   return(gene_snp)
 }
+

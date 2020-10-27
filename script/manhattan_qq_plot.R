@@ -203,7 +203,7 @@ manhattan_data_prepare <- function(gwas_res_emmax) {
   # plan(multiprocess)
   # gwas_res_emmax$CHR <- future.apply::future_apply(gwas_res_emmax, 1, splite_chr, c = "SNP")
   # gwas_res_emmax$BP <- future.apply::future_apply(gwas_res_emmax, 1, splite_pos, c = "SNP")
-  chr_pos <- colsplit(string=gwas_res_emmax$SNP, pattern="_", names=c("CHR", "BP"))
+  chr_pos <- colsplit(string = gwas_res_emmax$SNP, pattern = "_", names = c("CHR", "BP"))
   gwas_res_emmax <- cbind(gwas_res_emmax, chr_pos)
   gwas_res_emmax <- gwas_res_emmax %>% dplyr::select(SNP, CHR, BP, P)
   gwas_res_emmax$CHR <- as.integer(gwas_res_emmax$CHR)

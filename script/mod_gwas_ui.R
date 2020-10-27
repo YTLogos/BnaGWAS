@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param id
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mod_gwas_ui <- function(id) {
   ns <- NS(id)
   dashboardPage(

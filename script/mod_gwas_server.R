@@ -17,13 +17,13 @@ mod_gwas_server <- function(input, output, session) {
     manhattan_plot = NULL,
     QQ_plot = NULL
   )
-  
+
   ## ==========设定表型文件名用以后续写入及读取===============
-  trait_name <- eventReactive(input$run_gwas,{
-    name <- paste0("./tmp/", input$trait,".txt")
+  trait_name <- eventReactive(input$run_gwas, {
+    name <- paste0("./tmp/", input$trait, ".txt")
     return(name)
   })
-  
+
   ## ============上传表型数据======================
   pheno <- reactive({
     df <- readNewData(input$phenotype)
@@ -35,9 +35,9 @@ mod_gwas_server <- function(input, output, session) {
   })
   ## ===============可视化表型数据分布==================
   p_his <- reactive({
-    ggplot(pheno(), aes(x=V2,y=..density..))+
-      geom_histogram(fill="lightblue", color="grey60",size=0.2)+
-      geom_density(color="red")+
+    ggplot(pheno(), aes(x = V2, y = ..density..)) +
+      geom_histogram(fill = "lightblue", color = "grey60", size = 0.2) +
+      geom_density(color = "red") +
       labs(
         title = paste0("Distribution of Phenotype ", "(", input$trait, ")"),
         x = paste0("Value of Phenotype ", "(", input$trait, ")"),
@@ -68,20 +68,20 @@ mod_gwas_server <- function(input, output, session) {
         global_value$res <- res
         colnames(res) <- c("SNPID", "beta", "SE(beta)", "p-value")
         DT::datatable(res,
-                      rownames = FALSE,
-                      filter = "top",
-                      selection = "single",
-                      options = list(
-                        pageLength = 10,
-                        scrollX = TRUE,
-                        columnDefs = list(list(className = "dt-right", target = "_all"))
-                      )
+          rownames = FALSE,
+          filter = "top",
+          selection = "single",
+          options = list(
+            pageLength = 10,
+            scrollX = TRUE,
+            columnDefs = list(list(className = "dt-right", target = "_all"))
+          )
         )
       }
     )
   })
-  
-## =============下载GWAS结果================  
+
+  ## =============下载GWAS结果================
   output$download_gwas_res <- downloadHandler(
     filename = function() {
       paste0(Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.result.txt")
@@ -106,22 +106,22 @@ mod_gwas_server <- function(input, output, session) {
   #   gwas_data_vis <- manhattan_data_prepare(gwas_res_emmax = res)
   #   return(gwas_data_vis)
   # })
-  # 
-  
+  #
+
   observeEvent(input$run_vis, {
     global_value$col1 <- input$col1
     global_value$col2 <- input$col2
     global_value$logpvalue <- input$logpvalue
   })
-  
-  Bna_manhattan <- eventReactive(input$run_vis,{
-        gwas_data_vis <- manhattan_data_prepare(gwas_res_emmax = global_value$res)
-        global_value$gwas_res_emmax_vis <- gwas_data_vis
-        Bna_manhattan <- ggmanhattan(gwasres = global_value$gwas_res_emmax_vis, color = c(input$col1, input$col2), p_select = input$logpvalue, title = paste0("Manhattan Plot of Phenotype ", "(", input$trait, ")"), vlinesize = 0.5)
-        return(Bna_manhattan)
+
+  Bna_manhattan <- eventReactive(input$run_vis, {
+    gwas_data_vis <- manhattan_data_prepare(gwas_res_emmax = global_value$res)
+    global_value$gwas_res_emmax_vis <- gwas_data_vis
+    Bna_manhattan <- ggmanhattan(gwasres = global_value$gwas_res_emmax_vis, color = c(input$col1, input$col2), p_select = input$logpvalue, title = paste0("Manhattan Plot of Phenotype ", "(", input$trait, ")"), vlinesize = 0.5)
+    return(Bna_manhattan)
   })
-  
-  
+
+
   output$manhattanplot <- renderPlot({
     withProgress(
       message = "Visualization in progress",
@@ -136,7 +136,7 @@ mod_gwas_server <- function(input, output, session) {
       }
     )
   })
-  
+
   ## ===============download manhattan plot==================
   output$dm <- downloadHandler(
     filename <- function() {
@@ -166,8 +166,8 @@ mod_gwas_server <- function(input, output, session) {
       need(!is.null(global_value$logpvalue), "Select the logpvalue")
     )
     qqman::qq(global_value$gwas_res_emmax_vis$P)
-    })
-  
+  })
+
   ## ====================download QQ plot===============
   output$download_qqplot <- downloadHandler(
     filename <- function() {
@@ -190,10 +190,10 @@ mod_gwas_server <- function(input, output, session) {
       )
     }
   )
-  
+
   # ==========================Extraction====================================
   # ----------------output of gene select based on p-value
-  gene_select <- eventReactive(input$run_extraction,{
+  gene_select <- eventReactive(input$run_extraction, {
     p <- 10^-(input$sig_p)
     snp_select <- global_value$gwas_res_emmax_vis %>% dplyr::filter(P <= p)
     chr_select <- as.character(unique(snp_select$CHR))
@@ -204,18 +204,18 @@ mod_gwas_server <- function(input, output, session) {
   output$related_genes <- renderDT({
     shiny::req(gene_select())
     DT::datatable(gene_select(),
-                  rownames = FALSE,
-                  filter = "bottom",
-                  options = list(
-                    pageLength = 10,
-                    scrollX = TRUE,
-                    fixedColumns = TRUE,
-                    columnDefs = list(list(className = "dt-right", target = "_all"))
-                  )
+      rownames = FALSE,
+      filter = "bottom",
+      options = list(
+        pageLength = 10,
+        scrollX = TRUE,
+        fixedColumns = TRUE,
+        columnDefs = list(list(className = "dt-right", target = "_all"))
+      )
     )
   })
   # --------------download significant genes---------
-  
+
   output$download_genes <- downloadHandler(
     filename = function() {
       paste0(Sys.Date(), ".", input$trait, ".EMMAX.cov.signloci.1e-", input$sig_p, ".", input$distance, "Kb.txt")
@@ -224,27 +224,27 @@ mod_gwas_server <- function(input, output, session) {
       write.table(gene_select(), file, row.names = FALSE, col.names = TRUE, quote = FALSE)
     }
   )
-  
+
   # =========================gene annotation===================
   gene_anno_data <- eventReactive(input$run_annotation, {
     gene_id <- unique(gene_select()$gene)
     gene_anno_select <- Bna_anno %>% dplyr::filter(geneid %in% gene_id)
     return(gene_anno_select)
   })
-  
+
   output$gene_annotation <- renderDT({
     DT::datatable(gene_anno_data(),
-                  rownames = FALSE,
-                  filter = "bottom",
-                  options = list(
-                    pageLength = 10,
-                    scrollX = TRUE,
-                    fixedColumns = TRUE,
-                    columnDefs = list(list(className = "dt-right", target = "_all"))
-                  ), class = "white-space: nowrap"
+      rownames = FALSE,
+      filter = "bottom",
+      options = list(
+        pageLength = 10,
+        scrollX = TRUE,
+        fixedColumns = TRUE,
+        columnDefs = list(list(className = "dt-right", target = "_all"))
+      ), class = "white-space: nowrap"
     )
   })
-  
+
   # ---------------gene annotation download---------------
   output$gene_anno_download <- downloadHandler(
     filename = function() {
@@ -255,4 +255,3 @@ mod_gwas_server <- function(input, output, session) {
     }
   )
 }
-
