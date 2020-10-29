@@ -145,7 +145,7 @@ mod_gwas_ui <- function(id) {
           ),
           br(),
           tags$strong("If you use EMMAX to publish research, please cite: "),
-          tags$p("Kang HM, Sul JH, Service SK, Zaitlen NA, Kong SY, Freimer NB, Sabatti C, Eskin E. (2010) Variance component model to account for sample structure in genome-wide association studies. Nat. Genet. 42:348-54.")
+          tags$p("Kang HM, Sul JH, Service SK, Zaitlen NA, Kong SY, Freimer NB, Sabatti C, Eskin E. (2010) Variance component model to account for sample structure in genome-wide association studies. Nat. Genet. 42:348-54.", style = "font-family: Times, serif; font-weight: 500;font-size:15px;")
         ),
         # -----------------------------tabitam: vis-------------------------------------------
         tabItem(
