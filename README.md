@@ -1,4 +1,4 @@
-# Bna_GWAS_Cloud
+# BnaGWAS
 
 # <font face="Time" color=green size=6>Introduction</font>
 
