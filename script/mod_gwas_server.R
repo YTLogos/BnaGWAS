@@ -11,7 +11,7 @@ mod_gwas_server <- function(input, output, session) {
     logpvalue = NULL,
     sig_p = NULL,
     distance = NULL,
-    gwas_res_emmax_vis = NULL,
+    gwas_data_value = NULL,
     gene_extracted = NULL,
     gene_sig_select = NULL,
     manhattan_plot = NULL,
@@ -65,9 +65,15 @@ mod_gwas_server <- function(input, output, session) {
         }
         gwas_emmax(phenotype = trait_name(), out = out)
         res <- data.table::fread(paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.ps"), data.table = FALSE)
+        gwas_data <- manhattan_data_prepare(gwas_res_emmax = res)
+        fwrite(gwas_data,file = paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.txt"), sep = "\t", quote = FALSE)
+        cmd <- sprintf("python3 ./script/rename_chr.py  %s %s", paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.txt"), paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.chr.txt"))
+        system(cmd)
+        zip(zipfile = paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.chr.txt.zip"), files = paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.chr.txt"))
         global_value$res <- res
-        colnames(res) <- c("SNPID", "beta", "SE(beta)", "p-value")
-        DT::datatable(res,
+        gwas_data_dis <- fread(paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.chr.txt"), data.table = FALSE, col.names = c("SNP","CHR","BP","P"))
+        global_value$gwas_data_value <- gwas_data_dis
+        DT::datatable(gwas_data_dis,
           rownames = FALSE,
           filter = "top",
           selection = "single",
@@ -84,7 +90,7 @@ mod_gwas_server <- function(input, output, session) {
   ## =============下载GWAS结果================
   output$download_gwas_res <- downloadHandler(
     filename = function() {
-      paste0(Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.result.txt")
+      paste0(Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.result.txt.zip")
     },
     content <- function(file) {
       withProgress(
@@ -96,7 +102,8 @@ mod_gwas_server <- function(input, output, session) {
             incProgress(1 / 15)
             Sys.sleep(0.01)
           }
-          write.table(global_value$res, file, row.names = FALSE, col.names = TRUE, quote = FALSE)
+          # write.table(global_value$res, file, row.names = FALSE, col.names = c("SNPID", "beta", "SE(beta)", "p-value"), quote = FALSE)
+          file.copy(paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.chr.txt.zip"), file)
         }
       )
     }
@@ -115,9 +122,11 @@ mod_gwas_server <- function(input, output, session) {
   })
 
   Bna_manhattan <- eventReactive(input$run_vis, {
-    gwas_data_vis <- manhattan_data_prepare(gwas_res_emmax = global_value$res)
-    global_value$gwas_res_emmax_vis <- gwas_data_vis
-    Bna_manhattan <- ggmanhattan(gwasres = global_value$gwas_res_emmax_vis, color = c(input$col1, input$col2), p_select = input$logpvalue, title = paste0("Manhattan Plot of Phenotype ", "(", input$trait, ")"), vlinesize = 0.5)
+    # gwas_data_vis <- manhattan_data_prepare(gwas_res_emmax = global_value$res)
+    # global_value$gwas_res_emmax_vis <- gwas_data_vis
+    gwas_data_vis <- fread(paste0("./tmp/", Sys.Date(), ".", input$trait, ".GWAS.EMMAX.cov.txt"), data.table = FALSE)
+    global_value$gwas_data_vis <- gwas_data_vis
+    Bna_manhattan <- ggmanhattan(gwasres = gwas_data_vis, color = c(input$col1, input$col2), p_select = input$logpvalue, title = paste0("Manhattan Plot of Phenotype ", "(", input$trait, ")"), vlinesize = 0.5)
     manhattan_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".manhattan.png")
     ggsave(manhattan_name, Bna_manhattan, width = 15, height = 7,dpi = 300)
     return(Bna_manhattan)
@@ -125,9 +134,9 @@ mod_gwas_server <- function(input, output, session) {
   Bna_qqplot <- eventReactive(input$run_vis, {
     qqplot_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".QQplot.png")
     png(filename = qqplot_name,width = 8*300, height = 8*300, res = 300)
-    qqman::qq(global_value$gwas_res_emmax_vis$P, main = "Q-Q plot of GWAS p-values", col="blue4")
+    qqman::qq(global_value$gwas_data_vis$P, main = "Q-Q plot of GWAS p-values", col="blue4")
     dev.off()
-    Bna_qqplot <- qqman::qq(global_value$gwas_res_emmax_vis$P, main = "Q-Q plot of GWAS p-values", col="blue4")
+    Bna_qqplot <- qqman::qq(global_value$gwas_data_vis$P, main = "Q-Q plot of GWAS p-values", col="blue4")
     return(Bna_qqplot)
   })
 
@@ -201,7 +210,7 @@ mod_gwas_server <- function(input, output, session) {
   # ----------------output of gene select based on p-value
   gene_select <- eventReactive(input$run_extraction, {
     p <- 10^-(input$sig_p)
-    snp_select <- global_value$gwas_res_emmax_vis %>% dplyr::filter(P <= p)
+    snp_select <- global_value$gwas_data_value %>% dplyr::filter(P <= p)
     chr_select <- as.character(unique(snp_select$CHR))
     Bna_geneid_select <- Bna_geneid %>% dplyr::filter(chr %in% chr_select)
     gene_sig_select <- get_gene_from_snp(gff = Bna_geneid_select, sig.snp = snp_select, distance = input$distance)
