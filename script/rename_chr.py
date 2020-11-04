@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov  4 16:54:21 2020
+
+@author: taoyan
+"""
 import sys
 input=open(sys.argv[1],"r")
 output=open(sys.argv[2],"w")
