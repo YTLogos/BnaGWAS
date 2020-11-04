@@ -118,7 +118,17 @@ mod_gwas_server <- function(input, output, session) {
     gwas_data_vis <- manhattan_data_prepare(gwas_res_emmax = global_value$res)
     global_value$gwas_res_emmax_vis <- gwas_data_vis
     Bna_manhattan <- ggmanhattan(gwasres = global_value$gwas_res_emmax_vis, color = c(input$col1, input$col2), p_select = input$logpvalue, title = paste0("Manhattan Plot of Phenotype ", "(", input$trait, ")"), vlinesize = 0.5)
+    manhattan_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".manhattan.png")
+    ggsave(manhattan_name, Bna_manhattan, width = 15, height = 7,dpi = 300)
     return(Bna_manhattan)
+  })
+  Bna_qqplot <- eventReactive(input$run_vis, {
+    qqplot_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".QQplot.png")
+    png(filename = qqplot_name,width = 8*300, height = 8*300, res = 300)
+    qqman::qq(global_value$gwas_res_emmax_vis$P, main = "Q-Q plot of GWAS p-values", col="blue4")
+    dev.off()
+    Bna_qqplot <- qqman::qq(global_value$gwas_res_emmax_vis$P, main = "Q-Q plot of GWAS p-values", col="blue4")
+    return(Bna_qqplot)
   })
 
 
@@ -152,9 +162,7 @@ mod_gwas_server <- function(input, output, session) {
             incProgress(1 / 15)
             Sys.sleep(0.01)
           }
-          png(file, width = 15 * 300, height = 7 * 300, res = 300)
-          print(Bna_manhattan())
-          dev.off()
+          file.copy(manhattan_name, file)
         }
       )
     }
@@ -165,7 +173,7 @@ mod_gwas_server <- function(input, output, session) {
       need(!is.null(global_value$col1), "Select the Colors"),
       need(!is.null(global_value$logpvalue), "Select the logpvalue")
     )
-    qqman::qq(global_value$gwas_res_emmax_vis$P)
+    print(Bna_qqplot())
   })
 
   ## ====================download QQ plot===============
@@ -183,9 +191,7 @@ mod_gwas_server <- function(input, output, session) {
             incProgress(1 / 15)
             Sys.sleep(0.01)
           }
-          png(file, width = 7 * 300, height = 7 * 300, res = 300)
-          qqman::qq(global_value$gwas_res_emmax_vis$P)
-          dev.off()
+          file.copy(qqplot_name, file)
         }
       )
     }

@@ -161,9 +161,9 @@ ggmanhattan <- function(
       axis.line.x = element_line(color = "black", size = 1),
       axis.line.y = element_line(color = "black", size = 1),
       axis.ticks.length = unit(.25, "cm"),
-      axis.title = element_text(face = "bold", size = 20),
-      axis.text = element_text(face = "bold", size = 16, colour = "black"),
-      plot.title = element_text(hjust = 0.5, size = 20, face = "bold")
+      axis.title = element_text(face = "bold", size = 14),
+      axis.text = element_text(face = "bold", size = 12, colour = "black"),
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
     )
   class(p1) <- append(class(p1), "ggman")
 
