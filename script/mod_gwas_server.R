@@ -56,7 +56,7 @@ mod_gwas_server <- function(input, output, session) {
     out <- output(trait = input$trait)
     withProgress(
       message = "GWAS RUN in progress",
-      detail = "This may take 1 min! Please Wait! ...",
+      detail = "This may take 2 mins! Please Wait! ...",
       value = 0,
       {
         for (i in 1:15) {
