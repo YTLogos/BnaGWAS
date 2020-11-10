@@ -38,7 +38,7 @@ img {
 }
 
 .navbar-nav {
-    padding-left: 100px;
+    padding-left: 0px;
     background-color: #25282c;
 }
 
@@ -55,7 +55,7 @@ img {
     margin-top: 0px;
     display: block;
     background-color: #25282c;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 
