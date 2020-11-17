@@ -131,13 +131,13 @@ mod_gwas_ui <- function(id) {
               status = "warning",
               solidHeader = TRUE,
               title = strong("Distribution Of Your Phenotype"),
-              withSpinner(plotOutput(ns("phenotype_vis")), image = "img/loading-dog.gif")
+              withSpinner(plotOutput(ns("phenotype_vis")), image = "img/loading-dog.gif", image.width = 128, image.height = 128)
             ),
             shinydashboard::box(
               status = "warning",
               title = strong("Result of GWAS"),
               solidHeader = TRUE,
-              withSpinner(DT::dataTableOutput(ns("gwas_res")), image = "img/loading-dog.gif"),
+              withSpinner(DT::dataTableOutput(ns("gwas_res")), image = "img/loading-dog.gif", image.width = 128, image.height = 128),
               br(),
               br(),
               downloadButton(ns("download_gwas_res"), "Download GWAS Results")
@@ -188,7 +188,7 @@ mod_gwas_ui <- function(id) {
               status = "warning",
               width = 12,
               solidHeader = TRUE,
-              withSpinner(plotOutput(ns("manhattanplot")), image = "img/loading-dog.gif"),
+              withSpinner(plotOutput(ns("manhattanplot")), image = "img/loading-dog.gif", image.width = 128, image.height = 128),
               downloadButton(ns("dm"), "Manhattan Plot Download")
             )
           ),
@@ -198,7 +198,7 @@ mod_gwas_ui <- function(id) {
               status = "warning",
               width = 5,
               solidHeader = TRUE,
-              withSpinner(plotOutput(ns("qq_plot")), image = "img/loading-dog.gif"),
+              withSpinner(plotOutput(ns("qq_plot")), image = "img/loading-dog.gif", image.width = 128, image.height = 128),
               downloadButton(ns("download_qqplot"), "QQ Plot Download")
             )
           )
@@ -247,7 +247,7 @@ mod_gwas_ui <- function(id) {
               status = "warning",
               width = 12,
               solidHeader = TRUE,
-              withSpinner(DT::dataTableOutput(ns("related_genes")), image = "img/loading-dog.gif"),
+              withSpinner(DT::dataTableOutput(ns("related_genes")), image = "img/loading-dog.gif", image.width = 128, image.height = 128),
               br(),
               downloadButton(ns("download_genes"), "Download Significant Genes")
             )
@@ -281,7 +281,7 @@ mod_gwas_ui <- function(id) {
               status = "warning",
               width = 12,
               solidHeader = TRUE,
-              withSpinner(DT::dataTableOutput(ns("gene_annotation")), image = "img/loading-dog.gif"),
+              withSpinner(DT::dataTableOutput(ns("gene_annotation")), image = "img/loading-dog.gif", image.width = 128, image.height = 128),
               downloadButton(ns("gene_anno_download"), "Download Genes with Annotation")
             )
           )
