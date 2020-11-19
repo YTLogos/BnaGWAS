@@ -58,9 +58,18 @@ img {
     font-size: 20px;
 }
 
+.left-side, .main-sidebar {
+    padding-top: 10px;
+}
 
-
-
+.content {
+    min-height: 250px;
+    padding: 1px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
 
 
