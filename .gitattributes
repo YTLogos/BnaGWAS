@@ -1,0 +1,2 @@
+*.tped filter=lfs diff=lfs merge=lfs -text
+*.tped.xz filter=lfs diff=lfs merge=lfs -text
