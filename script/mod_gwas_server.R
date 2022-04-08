@@ -100,7 +100,7 @@ mod_gwas_server <- function(input, output, session) {
           options = list(
             pageLength = 10,
             scrollX = TRUE,
-            columnDefs = list(list(className = "dt-right", target = "_all"))
+            columnDefs = list(list(className = "dt-right", targets = "_all"))
           )
         )
       }
@@ -156,7 +156,7 @@ mod_gwas_server <- function(input, output, session) {
     qqplot_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".", input$trait, ".", input$ref, ".QQplot.png")
     png(filename = qqplot_name,width = 8*300, height = 8*300, res = 300)
     gwas_res_emmax_qq <-global_value$gwas_data_vis
-    #gwas_res_emmax_qq <- gwas_res_emmax_qq%>%filter(P<=0.1)
+    gwas_res_emmax_qq <- gwas_res_emmax_qq%>%filter(P<=0.1)
     qqman::qq(gwas_res_emmax_qq$P, main = "Q-Q plot of GWAS p-values", col="blue4")
     dev.off()
     Bna_qqplot <- qqman::qq(gwas_res_emmax_qq$P, main = "Q-Q plot of GWAS p-values", col="blue4")
@@ -253,7 +253,7 @@ mod_gwas_server <- function(input, output, session) {
         pageLength = 10,
         scrollX = TRUE,
         fixedColumns = TRUE,
-        columnDefs = list(list(className = "dt-right", target = "_all"))
+        columnDefs = list(list(className = "dt-right", targets = "_all"))
       )
     )
   })
@@ -288,7 +288,7 @@ mod_gwas_server <- function(input, output, session) {
         pageLength = 10,
         scrollX = TRUE,
         fixedColumns = TRUE,
-        columnDefs = list(list(className = "dt-right", target = "_all"))
+        columnDefs = list(list(className = "dt-right", targets = "_all"))
       ), class = "white-space: nowrap"
     )
   })

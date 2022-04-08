@@ -91,9 +91,12 @@ mod_gwas_ui <- function(id) {
           # upload phenotype file
           fluidRow(
             shinydashboard::box(
-              title = strong("Step1: Upload Your Phenotype File (.txt format)"),
+              title = strong("Step1: Upload Your Phenotype File"),
               status = "warning",
               solidHeader = TRUE,
+              br(),
+              br(),
+              br(),
               fileInput(ns("phenotype"),
                 label = "Upload Your Phenotype File (Support txt, csv and xlsx type) (NO Header!) (Leave blank for example run).",
                 accept = c(
@@ -109,7 +112,7 @@ mod_gwas_ui <- function(id) {
 
             #-----------------add trait name and select model ----------
             shinydashboard::box(
-              title = strong("Step2: Select Model and Enter Your Trait Name"),
+              title = strong("Step2: Select Reference Genome, GWAS Model and Enter Trait Name"),
               status = "warning",
               solidHeader = TRUE,
 
