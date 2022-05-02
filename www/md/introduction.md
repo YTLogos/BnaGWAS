@@ -46,7 +46,7 @@ table th:first-of-type {
 
 Where, column one correspond to samples, column two correspond to phenotype values.
 
-An example of the expected input phenotype dataset can be accessible <a href="https://raw.githubusercontent.com/YTLogos/pic_link/master/sample_phenotype.txt" target="_blank"> **here**</a>.</font>
+An example of the expected input phenotype dataset can be accessible <a href="https://bnapus-zju.com/sample_phenotype.txt" target="_blank"> **here**</a>.</font>
 
 ## <font color=green szie=5 face="Time">Other parameters</font>
 
