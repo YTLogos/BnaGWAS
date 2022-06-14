@@ -157,9 +157,9 @@ mod_gwas_server <- function(input, output, session) {
     png(filename = qqplot_name,width = 8*300, height = 8*300, res = 300)
     gwas_res_emmax_qq <-global_value$gwas_data_vis
     gwas_res_emmax_qq <- gwas_res_emmax_qq%>%filter(P<=0.1)
-    qqman::qq(gwas_res_emmax_qq$P, main = "Q-Q plot of GWAS p-values", col="blue4")
+    myqq(gwas_res_emmax_qq$P, main = "Q-Q plot of GWAS p-values", col="blue4")
     dev.off()
-    Bna_qqplot <- qqman::qq(gwas_res_emmax_qq$P, main = "Q-Q plot of GWAS p-values", col="blue4")
+    Bna_qqplot <- myqq(gwas_res_emmax_qq$P, main = "Q-Q plot of GWAS p-values", col="blue4")
     return(Bna_qqplot)
   })
 
