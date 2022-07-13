@@ -148,12 +148,12 @@ mod_gwas_server <- function(input, output, session) {
     global_value$gwas_data_vis <- gwas_data_vis
     gwas_res_emmax_m <- gwas_data_vis%>%filter(P<=0.1)
     Bna_manhattan <- ggmanhattan(gwasres = gwas_res_emmax_m, color = c(input$col1, input$col2), p_select = input$logpvalue, title = paste0("Manhattan Plot of Phenotype ", "(", input$trait, ")"), vlinesize = 0.5, ref = input$ref)
-    manhattan_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".", input$trait, ".", input$ref, ".manhattan.png")
+    manhattan_name <<- paste0("./tmp/",make.names(Sys.time()),".", input$trait, ".", input$ref, ".manhattan.png")
     ggsave(manhattan_name, Bna_manhattan, width = 15, height = 7,dpi = 300)
     return(Bna_manhattan)
   })
   Bna_qqplot <- eventReactive(input$run_vis, {
-    qqplot_name <<- paste0("./tmp/",system("date +%Y%m%d%H%M%S", intern = TRUE),".", input$trait, ".", input$ref, ".QQplot.png")
+    qqplot_name <<- paste0("./tmp/",make.names(Sys.time()),".", input$trait, ".", input$ref, ".QQplot.png")
     png(filename = qqplot_name,width = 8*300, height = 8*300, res = 300)
     gwas_res_emmax_qq <-global_value$gwas_data_vis
     gwas_res_emmax_qq <- gwas_res_emmax_qq%>%filter(P<=0.1)
